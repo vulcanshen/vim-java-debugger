@@ -11,8 +11,9 @@ adapter/.gradle/
 # Plugin runtime data
 .vim-java-debugger/
 
-# Java
+# Java / Maven
 *.class
+target/
 
 # Claude
 .claude/
