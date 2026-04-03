@@ -1,4 +1,4 @@
-package com.github.vimjavadebugger;
+package io.vulcanshen.vimjavadebugger;
 
 import java.io.File;
 

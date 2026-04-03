@@ -1,4 +1,4 @@
-package com.github.vimjavadebugger;
+package io.vulcanshen.vimjavadebugger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
