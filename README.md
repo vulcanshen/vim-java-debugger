@@ -17,10 +17,10 @@ A Neovim plugin for debugging Java applications using the [Debug Adapter Protoco
 ## Requirements
 
 - **Neovim** >= 0.9
-- **Java** >= 11
-- [nvim-dap](https://github.com/mfussenegger/nvim-dap)
-- (Optional) [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) for debug panels
-- (Optional) [which-key.nvim](https://github.com/folke/which-key.nvim) for keymap hints
+- **Java** >= 11 (runtime)
+- **[nvim-dap](https://github.com/mfussenegger/nvim-dap)** (required)
+- **[nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)** (recommended — provides variable inspector, stack trace panel, REPL, etc.)
+- [which-key.nvim](https://github.com/folke/which-key.nvim) (optional — keymap hints)
 - **Maven** projects: `mvnw` or system `mvn`
 - **Gradle** projects: `gradlew` or system `gradle`
 
@@ -29,21 +29,31 @@ A Neovim plugin for debugging Java applications using the [Debug Adapter Protoco
 ### lazy.nvim
 
 ```lua
-return {
-  {
-    "mfussenegger/nvim-dap",
-    lazy = true,
-  },
-  {
-    "vulcanshen/vim-java-debugger",
-    ft = "java",
-    dependencies = { "mfussenegger/nvim-dap" },
-    build = "./install.sh",
-    config = function()
-      require("vim-java-debugger").setup()
-    end,
-  },
-}
+{
+  "mfussenegger/nvim-dap",
+  lazy = true,
+},
+{
+  "rcarriga/nvim-dap-ui",
+  dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+  config = function()
+    local dapui = require("dapui")
+    dapui.setup()
+    local dap = require("dap")
+    dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+    dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+    dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+  end,
+},
+{
+  "vulcanshen/vim-java-debugger",
+  ft = "java",
+  dependencies = { "mfussenegger/nvim-dap" },
+  build = "./install.sh",
+  config = function()
+    require("vim-java-debugger").setup()
+  end,
+},
 ```
 
 The `install.sh` script automatically downloads the pre-built adapter JAR from GitHub Releases. No JDK or Gradle needed for installation.
@@ -148,13 +158,14 @@ The main class is saved to `.vim-java-debugger/main_class` after a successful de
 
 ```
 vim-java-debugger/
-├── adapter/              # Java DAP adapter (Gradle project)
-│   └── src/main/java/    # DapServer, JavaDebugger, etc.
-├── lua/vim-java-debugger/ # Neovim plugin (Lua)
-│   ├── init.lua           # Plugin setup & DAP registration
-│   ├── config.lua         # Configuration & keymaps
-│   └── breakpoints.lua    # Breakpoint persistence
-└── vim-java-debugger.lua  # Example lazy.nvim plugin spec
+├── adapter/               # Java DAP adapter (Gradle project)
+│   └── src/main/java/     # DapServer, JavaDebugger, etc.
+├── lua/vim-java-debugger/  # Neovim plugin (Lua)
+│   ├── init.lua            # Plugin setup & DAP registration
+│   ├── config.lua          # Configuration & keymaps
+│   └── breakpoints.lua     # Breakpoint persistence
+├── install.sh              # Auto-download adapter JAR from GitHub Releases
+└── .github/workflows/      # CI: build & release on tag push
 ```
 
 ## License
