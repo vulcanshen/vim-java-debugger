@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.0] - 2026-04-06
+
+### Added
+
+- Maven project debugging (compile → dependency:build-classpath → java -cp)
+- Gradle project debugging (classes → init script classpath → java -cp)
+- Spring Boot project support
+- Dynamic debug port allocation (no more port 5005 conflicts)
+- stderr forwarding to DAP console
+- Main class FQCN auto-detection from file path
+- Main class persistence (.vim-java-debugger/main_class)
+- Main class selection popup when current file differs from saved record
+- `<leader>dm` keymap to manually set main class
+- install.sh for auto-downloading adapter JAR from GitHub Releases
+- GitHub Actions workflow for automated release builds
+- Git-based version numbering (git describe --tags)
+
+### Fixed
+
+- Thread-aware stepping and variable inspection (fixes multi-thread apps like Spring Boot)
+- Single ClassPrepareRequest per class (fixes skipped first breakpoint)
+- Synchronized DAP message sending (fixes JSON corruption in multi-thread output)
+- JDI attach with retry (fixes JDWP handshake failures)
+- Clean adapter exit on disconnect and program termination (no more exit code 130)
+- Maven/Gradle command validation with clear error messages
+
 ## [1.0.0] - 2026-04-03
 
 ### Added
