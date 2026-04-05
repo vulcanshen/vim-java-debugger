@@ -156,11 +156,9 @@ function M.get_adapter_jar()
   end
 
   -- fallback: 本地 build 的 JAR（開發用）
-  local build_dir = plugin_dir .. "/adapter/build/libs"
-  local glob = vim.fn.glob(build_dir .. "/vim-java-debugger-*-all.jar")
-  if glob ~= "" then
-    -- 取第一個匹配的（可能有版本號）
-    return vim.split(glob, "\n")[1]
+  local build_jar = plugin_dir .. "/adapter/build/libs/vim-java-debugger-all.jar"
+  if vim.fn.filereadable(build_jar) == 1 then
+    return build_jar
   end
 
   vim.notify(

@@ -51,6 +51,8 @@ jar {
 
 tasks.register('fatJar', Jar) {
     dependsOn classes
+    archiveBaseName = 'vim-java-debugger'
+    archiveVersion = ''
     archiveClassifier = 'all'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
