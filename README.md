@@ -28,35 +28,46 @@ A Neovim plugin for debugging Java applications using the [Debug Adapter Protoco
 
 ### lazy.nvim
 
+Create a file at `~/.config/nvim/lua/plugins/vim-java-debugger.lua` with the following content:
+
 ```lua
-{
-  "mfussenegger/nvim-dap",
-  lazy = true,
-},
-{
-  "rcarriga/nvim-dap-ui",
-  dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
-  config = function()
-    local dapui = require("dapui")
-    dapui.setup()
-    local dap = require("dap")
-    dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
-    dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
-    dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
-  end,
-},
-{
-  "vulcanshen/vim-java-debugger",
-  ft = "java",
-  dependencies = { "mfussenegger/nvim-dap" },
-  build = "./install.sh",
-  config = function()
-    require("vim-java-debugger").setup()
-  end,
-},
+-- ~/.config/nvim/lua/plugins/vim-java-debugger.lua
+return {
+  {
+    "mfussenegger/nvim-dap",
+    lazy = true,
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    config = function()
+      local dapui = require("dapui")
+      dapui.setup()
+      local dap = require("dap")
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
+  },
+  {
+    "vulcanshen/vim-java-debugger",
+    ft = "java",
+    dependencies = { "mfussenegger/nvim-dap" },
+    build = "./install.sh",
+    config = function()
+      require("vim-java-debugger").setup()
+    end,
+  },
+}
 ```
 
-The `install.sh` script automatically downloads the pre-built adapter JAR from GitHub Releases. No JDK or Gradle needed for installation.
+Then restart Neovim or run `:Lazy sync`. The `install.sh` script automatically downloads the pre-built adapter JAR from GitHub Releases. No JDK or Gradle needed for installation.
 
 ### Build from source (for development)
 
