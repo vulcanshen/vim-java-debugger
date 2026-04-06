@@ -30,8 +30,18 @@ jobs:
         run: |
           cp adapter/build/libs/*-all.jar nvim-java-debugger-all.jar
 
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          # 擷取 CHANGELOG.md 中對應版本的區塊
+          NOTES=$(awk "/^## \\[$VERSION\\]/{found=1; next} /^## \\[/{if(found) exit} found{print}" CHANGELOG.md)
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: nvim-java-debugger-all.jar
-          generate_release_notes: true
+          body: ${{ steps.changelog.outputs.notes }}

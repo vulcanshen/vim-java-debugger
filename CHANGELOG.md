@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.1.0] - 2026-04-06
+
+### Added
+
+- Variable expansion: objects show toString() value and can be expanded to view fields
+- String variables display actual value instead of "instance of java.lang.String"
+- Array variables show Type[length] and can be expanded to view elements
+- `this` reference shown in non-static methods
+- Watch expressions support: variable, field access, no-arg method call, chained access, array index
+- DAP evaluate request: works in both Watch panel and REPL (dap>)
+
 ## [2.0.0] - 2026-04-06
 
 ### Added
